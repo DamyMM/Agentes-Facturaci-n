@@ -1,0 +1,8 @@
+.env
+.agents.json
+bitacora/
+__pycache__/
+*.pyc
+prueba/odoo_simulado.json
+prueba/bitacora/
+.pytest_cache/

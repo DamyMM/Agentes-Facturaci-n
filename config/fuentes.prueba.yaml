@@ -1,0 +1,31 @@
+# Modo prueba: planillas de ejemplo generadas por prueba/generar_datos.py (rutas relativas a la raíz)
+tarifarios_clientes:
+  descripcion: "Tarifario aplicable por cliente"
+  tipo: xlsx
+  path: prueba/datos/tarifarios_clientes.xlsx
+  unidades: [despacho, transporte, forwarder, ecommerce]
+transferencias:
+  descripcion: "Transferencias Harbor - NUEVA, hoja Pagos Diarios: pagos, OP y gastos por cuenta y orden"
+  tipo: xlsx
+  path: prueba/datos/transferencias.xlsx
+  unidades: [despacho, transporte, forwarder, ecommerce]
+despacho_operaciones:
+  descripcion: "Despacho: carpetas con oficialización, liberación, pase a facturación y digitalización (en producción sale de Odoo/DUX/MOA)"
+  tipo: xlsx
+  path: prueba/datos/despacho_operaciones.xlsx
+  unidades: [despacho]
+forwarder_operaciones:
+  descripcion: "Forwarder: operaciones con ETA vigente y anterior, BL/AWB y cotización aceptada (en producción sale de Odoo)"
+  tipo: xlsx
+  path: prueba/datos/forwarder_operaciones.xlsx
+  unidades: [forwarder]
+chx_seguimiento:
+  descripcion: "Transporte: Seguimiento y control de pedidos CHX. Hojas BaseDatos (hitos) y Factura2026 (compras de transportistas)"
+  tipo: xlsx
+  path: prueba/datos/chx_seguimiento.xlsx
+  unidades: [transporte, forwarder]
+detalles_optimus:
+  descripcion: "E-commerce/Courier: DETALLES CARPETAS OPTIMUS. Hoja1 (carpetas C…, MANI/REENV) y Peones (TLEA/SEMI diarios)"
+  tipo: xlsx
+  path: prueba/datos/detalles_optimus.xlsx
+  unidades: [ecommerce, forwarder]

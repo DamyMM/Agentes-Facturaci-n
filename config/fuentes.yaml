@@ -1,0 +1,60 @@
+# Fuentes de datos que los agentes pueden LEER (nunca escribir).
+# Cada fuente tiene un nombre corto que el agente usa con la herramienta `leer_fuente`.
+#   tipo: gsheet  -> Google Sheets (id = spreadsheetId de la URL)
+#   tipo: xlsx    -> archivo local (p. ej. export/sincronización de OneDrive)
+# `unidades` limita qué especialista puede leerla (además del coordinador).
+# COMPLETAR los id/path. Nombres tomados del manual de procesos.
+
+transferencias:
+  descripcion: "Transferencias Harbor - NUEVA: compras, OP, pagos y gastos por cuenta y orden (Pagos Diarios, Cheques)"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [despacho, transporte, forwarder, ecommerce]
+
+flujo_caja:
+  descripcion: "flujo_caja / Facturas_Cobrar: proyección. 'OK' no prueba cobro"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [despacho, transporte, forwarder, ecommerce]
+
+tarifarios_clientes:
+  descripcion: "Tarifario aplicable por cliente (lo usa Yas para facturar carpetas)"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [despacho, transporte, forwarder, ecommerce]
+
+seguimiento_clasificaciones:
+  descripcion: "Despacho: «seguimiento clasificaciones (1)»"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [despacho]
+
+moa_operaciones:
+  descripcion: "Despacho: detalle ARCA «Mis operaciones Aduaneras» del período (Drive «Despacho»)"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [despacho]
+
+chx_seguimiento:
+  descripcion: "Transporte: Seguimiento y control de pedidos CHX.xlsx (OneDrive). Hojas BaseDatos, Factura2026"
+  tipo: xlsx
+  path: /ruta/sincronizada/Seguimiento y control de pedidos CHX.xlsx
+  unidades: [transporte, forwarder]
+
+detalles_optimus:
+  descripcion: "E-commerce/Courier: DETALLES CARPETAS OPTIMUS.xlsx (Hoja1: carpetas C…, guía, MANI/REENV; Peones: TLEA/SEMI diarios)"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [ecommerce, forwarder]
+
+reporte_diario_courier:
+  descripcion: "E-commerce/Courier: REPORTE DIARIO (mes en curso): arribos, traslados, fracciones"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [ecommerce]
+
+tarifario_tlea:
+  descripcion: "E-commerce/Courier: «Costos y Tarifas Operativas TLEA» (Jorge Cabañe y los Baez)"
+  tipo: gsheet
+  id: TODO_SPREADSHEET_ID
+  unidades: [ecommerce, forwarder]

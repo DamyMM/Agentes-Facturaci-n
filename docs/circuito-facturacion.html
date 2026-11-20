@@ -1,0 +1,303 @@
+<title>Circuito de Facturación HG</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+/* Layout: una columna de lectura; el diagrama es un recorrido vertical que se abre en 4 carriles y vuelve a cerrarse en Administración */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --ink: #17202c;
+  --muted: #5a6575;
+  --line: #d6dbe3;
+  --accent: #1d5aa8;
+  --accent-soft: #e3ecf8;
+  --admin: #a85f00;
+  --admin-soft: #fbf0df;
+  --ok: #1f7a4d;
+  --warn: #9a6a00;
+  --bad: #b03a2e;
+  --f-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161d; --surface: #19202a; --ink: #e6eaf0; --muted: #9aa5b4; --line: #2d3744;
+    --accent: #7fb0ec; --accent-soft: #1c2b40; --admin: #f0b45a; --admin-soft: #33270f;
+    --ok: #5cc493; --warn: #e5b94e; --bad: #ef7f72; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161d; --surface: #19202a; --ink: #e6eaf0; --muted: #9aa5b4; --line: #2d3744;
+  --accent: #7fb0ec; --accent-soft: #1c2b40; --admin: #f0b45a; --admin-soft: #33270f;
+  --ok: #5cc493; --warn: #e5b94e; --bad: #ef7f72; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 2.5rem 4rem;
+}
+.wrap { max-width: 960px; margin: 0 auto; display: grid; gap: 3.5rem; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(2rem, 5vw, 2.9rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; font-weight: 700; }
+h3 { font-size: 1.1rem; font-weight: 600; }
+p { margin: 0; }
+.eyebrow { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.12rem; color: var(--muted); max-width: 62ch; }
+header { display: grid; gap: 0.9rem; }
+section { display: grid; gap: 1.25rem; }
+section > p { max-width: 65ch; }
+code, .mono { font-family: var(--f-mono); font-size: 0.88em; }
+
+/* ---------- Diagrama ---------- */
+.flow { display: grid; gap: 0; justify-items: center; }
+.node {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1.1rem;
+  width: min(100%, 480px); display: grid; gap: 0.25rem;
+}
+.node .who { font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.node.agent { border-color: var(--accent); }
+.node.agent .who { color: var(--accent); }
+.node.admin { background: var(--admin-soft); border: 2px solid var(--admin); }
+.node.admin .who { color: var(--admin); font-weight: 500; }
+.node.end { background: var(--accent-soft); border-color: transparent; }
+.arrow { width: 2px; height: 28px; background: var(--line); position: relative; }
+.arrow::after {
+  content: ""; position: absolute; left: 50%; bottom: -1px; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: var(--line); border-bottom: 0;
+}
+.arrow-label { font-family: var(--f-mono); font-size: 0.75rem; color: var(--muted); padding: 0.2rem 0 0.35rem; }
+.lanes {
+  width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem;
+  border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); padding-block: 1rem; margin-block: 0.25rem;
+}
+.lane { background: var(--surface); border: 1px solid var(--accent); border-radius: 8px; padding: 0.85rem; display: grid; gap: 0.45rem; align-content: start; min-width: 0; }
+.lane h3 { color: var(--accent); }
+.lane .rule { font-size: 0.9rem; }
+.lane .src { font-size: 0.8rem; color: var(--muted); }
+.lane .src b { font-weight: 500; color: var(--ink); }
+.loop-note { font-size: 0.85rem; color: var(--muted); text-align: center; max-width: 52ch; padding-top: 0.4rem; }
+@media (max-width: 760px) { .lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 440px) { .lanes { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Revisión ---------- */
+.review { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+@media (max-width: 760px) { .review { grid-template-columns: minmax(0, 1fr); } }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; }
+.checklist li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: 0.6rem; }
+.box { width: 1.1rem; height: 1.1rem; border: 2px solid var(--admin); border-radius: 3px; margin-top: 0.22rem; }
+.checklist strong { font-weight: 600; }
+
+.draft { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 0.86rem; }
+.draft-head { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); }
+.pill { font-family: var(--f-mono); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap; }
+.pill.draft-st { color: var(--muted); }
+.pill.ok { color: var(--ok); } .pill.warn { color: var(--warn); } .pill.bad { color: var(--bad); }
+.draft dl { margin: 0; padding: 0.7rem 0.9rem; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.3rem 0.9rem; border-bottom: 1px solid var(--line); }
+.draft dt { color: var(--muted); } .draft dd { margin: 0; font-family: var(--f-mono); overflow-wrap: anywhere; }
+.draft table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.draft th, .draft td { text-align: left; padding: 0.45rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.draft th { font-weight: 500; color: var(--muted); font-size: 0.78rem; }
+.draft td.num, .draft th.num { text-align: right; white-space: nowrap; }
+.tag { font-family: var(--f-mono); font-size: 0.74rem; color: var(--accent); }
+.narr { padding: 0.7rem 0.9rem; font-family: var(--f-mono); font-size: 0.76rem; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+.caption { font-size: 0.8rem; color: var(--muted); padding: 0.5rem 0.9rem 0.8rem; }
+
+/* ---------- Tablas ---------- */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.tbl { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 0.92rem; }
+.tbl th, .tbl td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl th { font-family: var(--f-mono); font-weight: 500; font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.tbl td:first-child { font-weight: 600; white-space: nowrap; }
+
+.states { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; }
+@media (max-width: 700px) { .states { grid-template-columns: minmax(0, 1fr); } }
+.state { border-left: 3px solid; padding: 0.2rem 0 0.2rem 0.9rem; display: grid; gap: 0.35rem; }
+.state.ok { border-color: var(--ok); } .state.warn { border-color: var(--warn); } .state.bad { border-color: var(--bad); }
+.state h3 { font-family: var(--f-mono); font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em; }
+.state.ok h3 { color: var(--ok); } .state.warn h3 { color: var(--warn); } .state.bad h3 { color: var(--bad); }
+.state p { font-size: 0.93rem; }
+
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
+@media (max-width: 700px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.plain { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; }
+.plain li::marker { color: var(--muted); }
+ol.plain li::marker { font-family: var(--f-mono); font-size: 0.85em; }
+footer { font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1rem; }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Harbor Gateway · Administración · Noviembre 2026</span>
+  <h1>Circuito de facturación con agentes</h1>
+  <p class="lede">Las solicitudes de facturación entran por un coordinador, que las deriva al especialista de cada unidad. El especialista arma la factura con los datos de Odoo y de las planillas y la deja <strong>en borrador</strong>. La emisión sigue siendo de Administración.</p>
+</header>
+
+<section aria-labelledby="t-recorrido">
+  <h2 id="t-recorrido">El recorrido de una solicitud</h2>
+  <div class="flow">
+    <div class="node">
+      <span class="who">Operaciones · correo o mensaje</span>
+      <p>Llega la solicitud: «Facturar a Denver la devolución del TRHU7624820, carpeta 22455-26».</p>
+    </div>
+    <div class="arrow" aria-hidden="true"></div>
+    <div class="node agent">
+      <span class="who">Agente coordinador</span>
+      <p>Identifica cliente, operación y <strong>qué unidad vende</strong> el servicio. Si la operación toca varias unidades, le pasa a cada una sólo su parte. Si falta el cliente o la operación, lo pide.</p>
+    </div>
+    <span class="arrow-label">deriva a uno o más especialistas</span>
+    <div class="lanes">
+      <div class="lane">
+        <h3>Despacho</h3>
+        <p class="rule">Factura dentro de las <strong>48 h corridas desde la liberación</strong>.</p>
+        <p class="src"><b>Lee:</b> pase a facturación y compras en Odoo, fondos y VEP en Transferencias, MOA, tarifario.</p>
+      </div>
+      <div class="lane">
+        <h3>Forwarder</h3>
+        <p class="rule">Importación: <strong>5 días corridos antes del arribo</strong>. Exportación: a definir.</p>
+        <p class="src"><b>Lee:</b> cotización aceptada, BL/AWB/MIC/CRT, compras del proveedor, tarifario.</p>
+      </div>
+      <div class="lane">
+        <h3>Transporte</h3>
+        <p class="rule">Factura lo <strong>ejecutado con evidencia</strong>: retiro, entrega, devolución.</p>
+        <p class="src"><b>Lee:</b> planilla CHX (BaseDatos, Factura2026), Odoo Logística y Depósito.</p>
+      </div>
+      <div class="lane">
+        <h3>E-commerce</h3>
+        <p class="rule"><strong>Quincena Optimus</strong>: TLEA, MANI, REENV, DESCO y recuperos.</p>
+        <p class="src"><b>Lee:</b> Detalles Carpetas Optimus, reporte diario, tarifario TLEA.</p>
+      </div>
+    </div>
+    <span class="arrow-label">crea la factura en Odoo</span>
+    <div class="node agent">
+      <span class="who">Odoo · estado Borrador</span>
+      <p>Factura de cliente en la compañía de la unidad, con cada línea tipificada y la evidencia en las notas internas. El especialista informa al coordinador.</p>
+    </div>
+    <div class="arrow" aria-hidden="true"></div>
+    <div class="node agent">
+      <span class="who">Agente coordinador</span>
+      <p>Verifica que no haya dos borradores por el mismo servicio y envía un resumen con resultado, total y pendientes.</p>
+    </div>
+    <div class="arrow" aria-hidden="true"></div>
+    <div class="node admin">
+      <span class="who">Administración · tu parte</span>
+      <p><strong>Revisa el borrador</strong>, corrige si hace falta y lo valida. Recién ahí existe la factura fiscal.</p>
+    </div>
+    <div class="arrow" aria-hidden="true"></div>
+    <div class="node end">
+      <span class="who">Después</span>
+      <p>Envío al cliente, cobranza, recibo y conciliación siguen el circuito actual de Administración.</p>
+    </div>
+    <p class="loop-note">Para lotes, como todas las carpetas liberadas de una semana o una quincena de Optimus, el coordinador lanza varios especialistas en paralelo y entrega un solo resumen.</p>
+  </div>
+</section>
+
+<section aria-labelledby="t-revisar">
+  <h2 id="t-revisar">Qué revisar en cada borrador</h2>
+  <div class="review">
+    <ul class="checklist">
+      <li><span class="box" aria-hidden="true"></span><p><strong>Notas internas.</strong> Cada línea dice de dónde salió: hoja y celda, documento de Odoo o correo, con fecha. Si una evidencia no te convence, no valides.</p></li>
+      <li><span class="box" aria-hidden="true"></span><p><strong>Tipo de línea.</strong> Entre corchetes al final de cada descripción: <span class="tag">[honorario]</span> <span class="tag">[servicio]</span> <span class="tag">[gasto_recuperable]</span> <span class="tag">[cuenta_y_orden]</span> <span class="tag">[adicional]</span>. Los gastos por cuenta y orden no deben mezclarse con los honorarios.</p></li>
+      <li><span class="box" aria-hidden="true"></span><p><strong>Moneda.</strong> El agente usa la moneda original y no convierte. Si corresponde otra, se ajusta acá.</p></li>
+      <li><span class="box" aria-hidden="true"></span><p><strong>Tipo de comprobante y fecha.</strong> El agente puede dejarlos vacíos para que los defina Administración.</p></li>
+      <li><span class="box" aria-hidden="true"></span><p><strong>Plazo.</strong> Las notas indican la regla aplicada y la fecha límite, o por qué no se pudo calcular.</p></li>
+      <li><span class="box" aria-hidden="true"></span><p><strong>Pendientes.</strong> Si el resumen trae faltantes, se resuelven antes de validar o se valida sólo lo respaldado.</p></li>
+    </ul>
+
+    <figure class="draft" style="margin:0">
+      <div class="draft-head">
+        <span class="mono">Borrador · Logística y Depósito</span>
+        <span class="pill draft-st">Borrador</span>
+      </div>
+      <dl>
+        <dt>Cliente</dt><dd>Denver</dd>
+        <dt>Referencia</dt><dd>22455-26 / TRHU7624820</dd>
+        <dt>Moneda</dt><dd>ARS</dd>
+      </dl>
+      <table>
+        <thead><tr><th>Descripción</th><th class="num">Cant.</th><th class="num">Precio</th></tr></thead>
+        <tbody>
+          <tr><td>Retiro y devolución de vacío <span class="tag">[servicio]</span></td><td class="num">1</td><td class="num">850.000,00</td></tr>
+          <tr><td>Demora en terminal <span class="tag">[adicional]</span></td><td class="num">1</td><td class="num">120.000,00</td></tr>
+        </tbody>
+      </table>
+      <div class="narr">BORRADOR generado por agente de facturación (transporte). Requiere revisión de Administración.
+
+Devolución acreditada por interchange Exolgan 19/11 09:26.
+Evidencia por línea:
+- Retiro y devolución: BaseDatos U399 + interchange 19/11
+- Demora: aviso del transportista 19/11; falta su factura</div>
+      <figcaption class="caption">Ejemplo ilustrativo. Los importes no son reales.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section aria-labelledby="t-resultados">
+  <h2 id="t-resultados">Los tres resultados posibles</h2>
+  <div class="states">
+    <div class="state ok"><h3>BORRADOR CREADO</h3><p>Hay servicio prestado con evidencia, tarifa y cliente. Está en Odoo esperando revisión.</p></div>
+    <div class="state warn"><h3>PENDIENTE</h3><p>Falta algo imprescindible: liberación, tarifa, evidencia de ejecución o período. El resumen dice qué falta, qué documento lo resuelve y quién es responsable.</p></div>
+    <div class="state bad"><h3>RECHAZADA</h3><p>No corresponde facturar: ya existe factura para esa operación, la operación está cancelada (por ejemplo, BA01-26) o la venta es de otra unidad.</p></div>
+  </div>
+</section>
+
+<section aria-labelledby="t-unidades">
+  <h2 id="t-unidades">Reglas por unidad</h2>
+  <p>Tomadas del Manual de procesos de Harbor Gateway (19/11/2026).</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Unidad</th><th>Cuándo se factura</th><th>Cuidado con</th></tr></thead>
+      <tbody>
+        <tr><td>Despacho</td><td>48 h corridas desde la liberación documentada. No se cuenta desde el ETA ni la oficialización.</td><td>Honorarios separados de derechos, tasas y VEP por cuenta y orden.</td></tr>
+        <tr><td>Forwarder</td><td>Importación: al menos 5 días corridos antes del arribo. Exportación: sin plazo definido todavía.</td><td>Una reemisión de BL o AWB no es un servicio nuevo. Los bidones CHX16-26 los vende Forwarder.</td></tr>
+        <tr><td>Transporte</td><td>Servicio ejecutado y con evidencia. Un turno solo no alcanza.</td><td>Estadía, IMO, lavado y extras en líneas separadas. BA01-26 cancelado. CHX16-26 no se factura desde acá.</td></tr>
+        <tr><td>E-commerce</td><td>Quincena de Optimus. La solicitud tiene que indicar el período exacto.</td><td>Un REENV corregido (C939 y C945) cuenta una sola vez. ACC no se factura mientras siga en borrador.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="t-limites">
+  <h2 id="t-limites">Lo que el agente hace y lo que no</h2>
+  <div class="two">
+    <div>
+      <h3>Hace</h3>
+      <ul class="plain" style="margin-top:.6rem">
+        <li>Lee Odoo y las planillas de su unidad.</li>
+        <li>Crea facturas de cliente en borrador, en la compañía de su unidad.</li>
+        <li>Registra cada borrador y cada pendiente en una bitácora diaria.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>No hace</h3>
+      <ul class="plain" style="margin-top:.6rem">
+        <li>Validar o emitir facturas.</li>
+        <li>Enviar facturas ni escribir a clientes.</li>
+        <li>Registrar cobros, OP ni pagos.</li>
+        <li>Facturar en otra compañía, o dos veces la misma operación para el mismo cliente.</li>
+        <li>Modificar las planillas.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="t-definir">
+  <h2 id="t-definir">Lo que necesitamos definir con Administración</h2>
+  <ol class="plain">
+    <li>El plazo de facturación de exportaciones Forwarder: «antes de la salida» o «una semana antes».</li>
+    <li>El calendario de la quincena de Optimus: qué lunes arranca el ciclo.</li>
+    <li>Qué producto de Odoo corresponde a cada tipo de servicio, y qué tipo de comprobante (A, B o E) lleva cada cliente.</li>
+    <li>Los diarios de ventas de cada compañía.</li>
+    <li>Quién revisa los borradores de cada unidad y en qué plazo.</li>
+    <li>Las operaciones para el piloto: dos o tres por unidad, para comparar con lo que se factura hoy.</li>
+  </ol>
+</section>
+
+<footer>Fuente de las reglas: Manual de procesos de Harbor Gateway, 19/11/2026. El circuito todavía no está en producción.</footer>
+
+</div>

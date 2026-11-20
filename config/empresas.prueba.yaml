@@ -1,0 +1,5 @@
+# Modo prueba: IDs del Odoo simulado (facturacion/odoo_simulado.py)
+despacho:   {nombre: "Harbor Gateway SRL | Despacho", company_id: 1, journal_id: 300, currency_default: USD}
+transporte: {nombre: "Harbor Gateway SRL | Logística y Depósito", company_id: 2, journal_id: 301, currency_default: ARS}
+forwarder:  {nombre: "Harbor Gateway SRL | Forwarder", company_id: 3, journal_id: 302, currency_default: USD}
+ecommerce:  {nombre: "Harbor Gateway SRL | Courier / E-commerce", company_id: 4, journal_id: 303, currency_default: ARS}

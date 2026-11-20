@@ -1,0 +1,29 @@
+# Mapeo unidad de negocio -> compañía y diario de ventas en Odoo.
+# COMPLETAR con los IDs reales (Odoo > Ajustes > Compañías / Contabilidad > Diarios).
+# El agente NO elige la compañía: el servidor la fuerza según la unidad.
+# Fuente: manual, Transporte §3.4 «Separar Logística y Depósito, Forwarder y Despacho».
+
+despacho:
+  nombre: "Harbor Gateway SRL | Despacho"
+  company_id: null        # TODO
+  journal_id: null        # TODO diario de ventas
+  currency_default: ARS
+
+transporte:
+  nombre: "Harbor Gateway SRL | Logística y Depósito"
+  company_id: null        # TODO
+  journal_id: null        # TODO
+  currency_default: ARS
+
+forwarder:
+  nombre: "Harbor Gateway SRL | Forwarder"
+  company_id: null        # TODO
+  journal_id: null        # TODO
+  currency_default: USD
+
+ecommerce:
+  # En el manual figura como «Courier» (Courier Harbor / Optimus; ACC Logistics en borrador)
+  nombre: "Harbor Gateway SRL | Courier / E-commerce"
+  company_id: null        # TODO
+  journal_id: null        # TODO
+  currency_default: ARS
