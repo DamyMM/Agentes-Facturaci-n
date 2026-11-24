@@ -18,6 +18,13 @@ flowchart LR
     C --> R[Resumen para Administración] --> A[Administración revisa y valida en Odoo]
 ```
 
+## Circuito con tareas programadas (sin API key)
+
+Desde el 24/11/2026 el circuito puede correr con la suscripción de Claude: cada agente es una tarea
+programada de Claude Code (Agente Recepción → Agente Despacho / Forwarder / Transporte / Courier → Agente
+Control) y se pasan los pedidos por la rama `cola`. Ver [`tareas/README.md`](tareas/README.md).
+Resultado de la primera corrida de los 14 casos: [`prueba/corrida-tareas-2026-11-24.md`](prueba/corrida-tareas-2026-11-24.md).
+
 ## Reglas de facturación por unidad
 
 | Unidad | Cuándo se factura | Dónde busca los datos | Cuidado con |

@@ -1,0 +1,24 @@
+# Tareas programadas del circuito (una por agente). Ver tareas/README.md.
+# modo: prueba -> Odoo simulado y planillas de prueba/datos/ (agrega --prueba a todos los comandos)
+#       real   -> Odoo y planillas reales (requiere config/empresas.yaml, config/fuentes.yaml y secretos)
+modo: prueba
+zona_horaria: America/Argentina/Buenos_Aires
+
+# IDs de las tareas programadas (trig_...). Los completa quien crea las tareas.
+# Recepción los usa para avisarle al agente de la unidad; Control, para reintentar.
+tareas:
+  recepcion: null
+  despacho: null
+  forwarder: null
+  transporte: null
+  ecommerce: null
+  control: null
+
+# De dónde salen las solicitudes en modo real. PENDIENTE: Dami todavía no configuró el correo.
+correo:
+  etiqueta: null        # p. ej. "Facturar"
+  etiqueta_procesado: null   # p. ej. "Facturar/Procesado", para no leer dos veces el mismo mail
+
+# Adónde va el resumen diario de Control. PENDIENTE de definir.
+resumen:
+  destinatarios: []

@@ -6,3 +6,5 @@ __pycache__/
 prueba/odoo_simulado.json
 prueba/bitacora/
 .pytest_cache/
+prueba/compartido/
+compartido/
