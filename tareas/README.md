@@ -12,8 +12,8 @@ Claude Code que arranca en una sesión nueva sobre este repo.
 | Agente Courier | `tareas/unidad.md` (unidad `ecommerce`) | Ídem |
 | Agente Control | `tareas/control.md` | 18:40, lunes a viernes |
 
-Los agentes se pasan el pedido de dos formas: Recepción **dispara** la tarea de la unidad con el número de
-pedido, y el pedido queda guardado en la **rama `cola`** del repo (un JSON por pedido,
+Los agentes se pasan el pedido de dos formas: Recepción **dispara** la tarea de la unidad (sin texto: las
+tareas de un proyecto no lo aceptan) y el pedido queda guardado en la **rama `cola`** del repo (un JSON por pedido,
 `facturacion/cola.py`). Si un disparo se pierde, el barrido de respaldo lo levanta.
 
 Los controles siguen en el código: los agentes sólo usan `python -m facturacion.cli`, que pasa por
@@ -27,7 +27,6 @@ Cada tarea se crea con «una sesión nueva por disparo» sobre este repo, y este
 ```
 Sos el Agente <Nombre> del circuito de facturación de Harbor Gateway.
 Leé y seguí tareas/<archivo>.md de este repo. [Para los de unidad: Tu unidad es <unidad>.]
-Si este disparo trae texto agregado, es el pedido o la solicitud que te toca procesar.
 ```
 
 Después de crearlas, cargá los ids (`trig_...`) en `config/tareas.yaml > tareas` y commiteá.
@@ -44,4 +43,5 @@ python -m facturacion.cli --prueba reiniciar-prueba
 scripts/cola.sh subir "Reinicio del Odoo simulado"
 ```
 
-Después disparás Agente Recepción a mano con una solicitud de `prueba/casos.md` como texto.
+Las solicitudes de prueba son los `.txt` de `prueba/bandeja/`. Para probar, disparás Agente Recepción a
+mano: procesa los que todavía no tienen pedido en la cola.

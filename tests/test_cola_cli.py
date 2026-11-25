@@ -91,6 +91,12 @@ def test_solo_recepcion_crea_y_sin_repetidos(datos, capsys):
                           servicios="x", motivo_unidad="x", agente="transporte")
 
 
+def test_origen_procesado(datos, capsys):
+    assert correr(capsys, "--agente", "recepcion", "cola", "procesada", "--origen", "prueba") == (0, False)
+    crear(capsys)
+    assert correr(capsys, "--agente", "recepcion", "cola", "procesada", "--origen", "prueba") == (0, True)
+
+
 def test_sin_unidad_va_a_revision_humana(datos, capsys):
     cod, p = crear(capsys, unidad="ninguna", referencia="", cliente="")
     assert cod == 0 and p["estado"] == "revision_humana"

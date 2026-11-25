@@ -14,11 +14,22 @@ delegás creando pedidos en la cola, como se explica abajo.)
 
 ## 1. Juntar las solicitudes
 
-- **Si este disparo trae texto agregado** (una o más solicitudes), procesá esas. Origen: `disparo manual`.
-- **Si no trae texto y `config/tareas.yaml` tiene `correo.etiqueta`:** buscá en Gmail los mails con esa
-  etiqueta que no tengan `correo.etiqueta_procesado`. Cada mail es una solicitud. Origen:
-  `mail <remitente> <fecha> <asunto>`. Al terminar con cada mail, ponele la etiqueta de procesado.
-- **Si no hay ni texto ni correo configurado:** terminá diciendo que no hubo solicitudes.
+Las tareas de este proyecto no reciben texto al dispararse, así que las solicitudes salen de:
+
+- **Modo prueba:** cada archivo `.txt` de la carpeta `bandeja_prueba` de `config/tareas.yaml` es una
+  solicitud. Origen: `bandeja: <nombre del archivo>`.
+- **Modo real, si `config/tareas.yaml` tiene `correo.etiqueta`:** los mails con esa etiqueta que no tengan
+  `correo.etiqueta_procesado`. Cada mail es una solicitud. Origen: `mail <remitente> <fecha> <asunto>`.
+  Al terminar con cada mail, ponele la etiqueta de procesado.
+- **Si no hay nada de eso:** terminá diciendo que no hubo solicitudes.
+
+Antes de procesar una solicitud, fijate si ya se procesó:
+
+```bash
+python -m facturacion.cli --prueba --agente recepcion cola procesada --origen "bandeja: caso-01.txt"
+```
+
+Si responde `true`, salteala.
 
 ## 2. Clasificar cada solicitud
 
@@ -42,10 +53,13 @@ python -m facturacion.cli --prueba --agente recepcion cola crear \
   --unidad transporte --cliente "Denver" --referencia "22455-26 / TRHU7624820" \
   --servicios "retiro y devolución de contenedor, extras" \
   --motivo "devolución de contenedor = servicio de camión" \
-  --origen "disparo manual" --solicitud "<texto completo de la solicitud>"
+  --origen "bandeja: caso-01.txt" --solicitud "<texto completo de la solicitud>"
 ```
 
 Si responde «Pedido repetido», no lo crees de nuevo: anotalo en tu respuesta final.
+
+Una solicitud de la que no pudiste crear ningún pedido (porque todos eran repetidos) igual queda
+marcada como procesada si al menos un pedido tiene ese origen.
 
 ## 4. Avisar al agente de la unidad
 
@@ -56,9 +70,11 @@ el pedido):
 scripts/cola.sh subir "Recepción: HG-20261124-0007 derivado a transporte"
 ```
 
-Después disparalo con la herramienta de tareas programadas (`fire_trigger`), usando el id de
-`config/tareas.yaml > tareas.<unidad>` y pasándole como texto: `Pedido HG-20261124-0007`.
-Si el id es `null` o el disparo falla, no pasa nada grave: el barrido de respaldo del agente lo toma.
+Después disparala con la herramienta de tareas programadas (`fire_trigger`), usando el id de
+`config/tareas.yaml > tareas.<unidad>`, **sin texto agregado** (estas tareas no lo aceptan). El agente
+de la unidad arranca y procesa todos sus pedidos en estado `derivado`, así que alcanza con un disparo
+por unidad aunque le hayas creado varios pedidos.
+Si el disparo falla, no pasa nada grave: el pedido queda `derivado` y lo toma el barrido de respaldo.
 Anotalo en tu respuesta final.
 
 ## Respuesta final

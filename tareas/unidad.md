@@ -15,8 +15,8 @@ entendé «el pedido de la cola»; donde dicen `registrar_bitacora`, además cer
 
 ## 1. Qué pedidos procesar
 
-- **Si el disparo trae `Pedido HG-...`:** procesá ese pedido.
-- **Si no trae nada (barrido de respaldo):** procesá todos los de tu unidad en estado `derivado`:
+Procesá todos los pedidos de tu unidad en estado `derivado` (las tareas no reciben texto al dispararse,
+así que no importa si te disparó Recepción, Control o el horario de respaldo):
 
   ```bash
   python -m facturacion.cli --prueba --agente transporte cola listar --unidad transporte --estado derivado
