@@ -160,6 +160,10 @@ class Cola:
         return [p for p in self.listar() if p["estado"] in {"derivado", "en_proceso"}
                 and dt.datetime.fromisoformat(p["historial"][-1]["hora"]) < limite]
 
+    def procesada(self, origen: str) -> bool:
+        """True si ya hay algún pedido creado desde ese origen (mail o archivo de la bandeja)."""
+        return any(p["origen"] == origen for p in self.listar())
+
     def reintentos(self, pid: str) -> int:
         return sum(1 for h in self.leer(pid)["historial"] if h["accion"].startswith("reintento"))
 

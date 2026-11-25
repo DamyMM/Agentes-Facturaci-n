@@ -14,7 +14,7 @@ python -m facturacion.cli --prueba --agente control cola trabados --horas 2
 Para cada uno:
 
 - Si nunca se reintentó: `cola reintentar <id>`, subí la cola y disparale la tarea de su unidad
-  (`config/tareas.yaml > tareas.<unidad>`) con el texto `Pedido <id>`.
+  (`config/tareas.yaml > tareas.<unidad>`), sin texto agregado. Un disparo por unidad alcanza.
 - Si ya se reintentó (el comando lo rechaza): `cola revision-humana <id> --motivo "trabado después de un reintento"`.
 
 ## 2. Resumen del día

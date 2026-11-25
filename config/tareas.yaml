@@ -4,15 +4,19 @@
 modo: prueba
 zona_horaria: America/Argentina/Buenos_Aires
 
-# IDs de las tareas programadas (trig_...). Los completa quien crea las tareas.
+# IDs de las tareas programadas (trig_...), creadas el 25/11/2026. Por ahora sin horario:
+# se disparan a mano (Recepción) o entre ellas, hasta que esté configurado el correo.
 # Recepción los usa para avisarle al agente de la unidad; Control, para reintentar.
 tareas:
-  recepcion: null
-  despacho: null
-  forwarder: null
-  transporte: null
-  ecommerce: null
-  control: null
+  recepcion: trig_01TnDqVujwgcwPUMMqtPpBEo
+  despacho: trig_014RexYopm3bNSTgPozBwiMJ
+  forwarder: trig_01ATWfivw7Rwk4ExnTMu3BNg
+  transporte: trig_01YVzDzayA8vqLxxrWfc5wWs
+  ecommerce: trig_01F7t42Bvvuz8F3EhxoP7PYs
+  control: trig_01MMTQFJtV7bCZ7y2P2eLfF9
+
+# Modo prueba: cada .txt de esta carpeta es una solicitud (las tareas no reciben texto al dispararse).
+bandeja_prueba: prueba/bandeja
 
 # De dónde salen las solicitudes en modo real. PENDIENTE: Dami todavía no configuró el correo.
 correo:

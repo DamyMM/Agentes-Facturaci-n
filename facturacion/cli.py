@@ -111,6 +111,8 @@ def main(argv: list[str] | None = None) -> int:
     ch = cs.add_parser("revision-humana", help="Control: frenar un pedido para que lo vea una persona")
     ch.add_argument("id")
     ch.add_argument("--motivo", required=True)
+    cq = cs.add_parser("procesada", help="Recepción: ¿ya hay pedidos de este origen?")
+    cq.add_argument("--origen", required=True)
     cb = cs.add_parser("trabados")
     cb.add_argument("--horas", type=float, default=2.0)
 
@@ -162,6 +164,8 @@ def main(argv: list[str] | None = None) -> int:
             res = cola.reintentar(a.id)
         elif a.accion == "revision-humana":
             res = cola.cambiar(a.id, "revision_humana", a.agente, f"a revisión humana: {a.motivo}")
+        elif a.accion == "procesada":
+            res = cola.procesada(a.origen)
         elif a.accion == "trabados":
             res = cola.trabados(a.horas)
     except ErrorCola as e:
